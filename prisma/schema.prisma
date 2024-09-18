@@ -10,7 +10,7 @@ datasource db {
 model tasks {
   explation String   @db.VarChar
   category  String   @db.VarChar
-  date      DateTime @db.Date
+  date      DateTime @default(now()) @db.Timestamptz(6)
   status    String   @db.VarChar
   id        Int      @id(map: "tasks_pk") @default(autoincrement())
   user_id   Int
@@ -18,11 +18,12 @@ model tasks {
 }
 
 model users {
-  name     String  @db.VarChar
-  surname  String  @db.VarChar
-  nickname String  @db.VarChar
-  mail     String  @db.VarChar
-  password String  @db.VarChar
-  id       Int     @id(map: "users_pk") @default(autoincrement())
-  tasks    tasks[]
+  name         String   @db.VarChar
+  surname      String   @db.VarChar
+  nickname     String   @db.VarChar
+  mail         String   @db.VarChar
+  password     String   @db.VarChar
+  id           Int      @id(map: "users_pk") @default(autoincrement())
+  created_date DateTime @default(now()) @db.Timestamptz(6)
+  tasks        tasks[]
 }
