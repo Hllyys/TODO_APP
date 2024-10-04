@@ -8,13 +8,15 @@ datasource db {
 }
 
 model tasks {
-  explation String   @db.VarChar
-  category  String   @db.VarChar
-  date      DateTime @default(now()) @db.Timestamptz(6)
-  status    String   @db.VarChar
-  id        Int      @id(map: "tasks_pk") @default(autoincrement())
-  user_id   Int
-  users     users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_id")
+  explation   String   @db.VarChar
+  category_id Int
+  date        DateTime @default(now()) @db.Timestamptz(6)
+  status      String   @db.VarChar
+  id          Int      @id(map: "tasks_pk") @default(autoincrement())
+  user_id     Int
+  files       files[]
+  users       users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_id")
+  category    category @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_category_fk")
 }
 
 model users {
@@ -26,4 +28,19 @@ model users {
   id           Int      @id(map: "users_pk") @default(autoincrement())
   created_date DateTime @default(now()) @db.Timestamptz(6)
   tasks        tasks[]
+}
+
+model files {
+  id       Int      @id(map: "files_pk") @default(autoincrement())
+  filepath String   @db.VarChar
+  filename String   @db.VarChar
+  uploadat DateTime @default(now()) @db.Timestamptz(6)
+  task_id  Int
+  tasks    tasks    @relation(fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "files_tasks_fk")
+}
+
+model category {
+  id            Int     @id(map: "category_pk") @default(autoincrement())
+  category_name String  @db.VarChar
+  tasks         tasks[]
 }
